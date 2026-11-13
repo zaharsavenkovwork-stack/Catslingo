@@ -190,7 +190,7 @@ const today=()=>new Date().toISOString().slice(0,10);
 let S={xp:0,streak:0,last:'',done:{}};
 try{const j=JSON.parse(localStorage.getItem('eq'));if(j)S=j}catch(e){}
 S.coll=S.coll||{};
-const save=()=>{try{localStorage.setItem('eq',JSON.stringify(S))}catch(e){}try{submit()}catch(e){}};
+const save=()=>{S.t=Date.now();try{localStorage.setItem('eq',JSON.stringify(S))}catch(e){}try{cloudSave()}catch(e){}try{submit()}catch(e){}};
 try{if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand()}}catch(e){}
 
 function home(){
@@ -262,7 +262,7 @@ const PR=['Отлично!','Супер!','Так держать!','Верно!'
 function fb(ok,a,msg){
  if(ok)G.ok++;else{G.miss++;retry(G.cur)}
  const who=ok?'r':'p';
- const txt=ok?PR[Math.floor(Math.random()*PR.length)]:((msg||'Не страшно, ошибки помогают учиться. Правильно: <b>'+a+'</b>. Повторим это в конце урока.'));
+ const txt=ok?PR[Math.floor(Math.random()*PR.length)]:(msg||'Не страшно, ошибки помогают учиться. Правильно: <b>'+a+'</b>. Повторим это в конце урока.');
  $('#fbx').innerHTML=`<div class="fb ${ok?'ok':'no'} pop"><div class="fbr">${cat(who,ok?'happy':'sad')}<p>${ok?'<b>'+txt+'</b>':txt}</p></div><button class="btn" style="margin-top:0" onclick="G.k++;step()">Дальше</button></div>`;
 }
 function result(){
@@ -322,7 +322,7 @@ function words(){
  const rows=L.map(l=>{const ws=l.w.filter(w=>S.coll[w[0]]);return ws.length?`<h2>${l.e} ${l.t}</h2>`+ws.map(w=>`<div class="wr"><span class="we">${EX[w[0]][0]}</span><div><b>${w[0]}</b><small>${w[1]}</small></div><button class="x" onclick="say('${w[0]}')">🔊</button></div>`).join(''):''}).join('');
  $('#app').innerHTML=`<div class="top"><button class="x" onclick="home()" aria-label="Назад">←</button><div class="logo">📚 Мои слова</div><div class="pill">${n}/${ALLW.length}</div></div>${rows||'<div class="hero pop">'+cat('p','happy')+'<div class="bubble">Пока пусто. Пройди первый урок, и слова появятся здесь!</div></div>'}${nav('w')}`;
 }
-const esc=s=>String(s).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const learned=()=>ALLW.filter(w=>S.coll[w[0]]);
 const nav=a=>`<div class='nav'>${[['h','🏠','Учиться','home'],['g','🎮','Игры','games'],['w','📚','Слова','words'],['t','🏆','Топ','board']].map(x=>`<button class='${a===x[0]?'on':''}' onclick='${x[3]}()'><span>${x[1]}</span>${x[2]}</button>`).join('')}</div>`;
 let DB=null,UID=null,ME='',SENT='';
@@ -377,7 +377,37 @@ function speed(){
  next();
  const id=setInterval(()=>{if(!$('#tb')){clearInterval(id);return}t--;$('#tb').style.width=t/30*100+'%';if(t<=0){clearInterval(id);over=true;const nb=sc>(S.rec||0);if(nb)S.rec=sc;const xp=sc*2;S.xp+=xp;save();endScr('Время вышло!',[[sc,'слов'],[S.rec||0,'рекорд'],['+'+xp,'опыта']],nb&&sc>0?'Новый рекорд!':'','speed()')}},1000);
 }
+/* Облачное сохранение прогресса в Telegram CloudStorage */
+const CS=(window.Telegram&&Telegram.WebApp&&Telegram.WebApp.CloudStorage)||null;
+const CH=3500;
+function cloudSave(){
+ if(!CS)return;
+ clearTimeout(cloudSave.t);
+ cloudSave.t=setTimeout(()=>{try{
+  const j=JSON.stringify(S),n=Math.ceil(j.length/CH);
+  for(let i=0;i<n;i++)CS.setItem('eq'+i,j.slice(i*CH,(i+1)*CH),()=>{});
+  CS.setItem('eqn',String(n),()=>{});
+ }catch(e){}},800);
+}
+function cloudLoad(){
+ if(!CS)return;
+ try{CS.getItem('eqn',(e,n)=>{
+  n=+n;
+  if(e||!n){if(S.xp>0)cloudSave();return}
+  const ks=[...Array(n).keys()].map(i=>'eq'+i);
+  CS.getItems(ks,(e2,r)=>{try{
+   if(e2)return;
+   const c=JSON.parse(ks.map(k=>r[k]).join(''));
+   if((c.t||0)>(S.t||0)){
+    c.coll=c.coll||{};S=c;
+    try{localStorage.setItem('eq',JSON.stringify(S))}catch(x){}
+    if($('.path'))home();
+   }else if((S.t||0)>(c.t||0))cloudSave();
+  }catch(x){}});
+ })}catch(e){}
+}
 home();
+cloudLoad();
 </script>
 </body>
 </html>
