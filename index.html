@@ -67,6 +67,27 @@ h2{font-size:16px;margin:4px 4px 10px;color:var(--muted);text-transform:uppercas
 .stat b{display:block;font-size:26px;font-weight:900}
 .stat small{color:var(--muted);font-size:13px}
 .card{background:var(--card);border:2px solid var(--line);border-radius:24px;padding:22px;text-align:center;margin:10px 0 18px}
+.cat{object-fit:contain;flex:none;display:block}
+.hero .cat{width:96px;height:96px}.fbr .cat{width:84px;height:84px}.res .cat{width:170px;height:170px;margin-top:20px}
+.hero3{display:flex;flex-direction:column;align-items:center;gap:10px;background:var(--card);border:2px solid var(--line);border-radius:24px;padding:14px 14px 0;margin-bottom:14px;overflow:hidden}
+.bubble3{background:var(--bg);border-radius:18px;padding:10px 16px;font-size:15px;line-height:1.35;align-self:stretch;text-align:center}
+.bubble3 b{font-size:22px;font-weight:900;margin-right:6px}
+.trio{display:flex;align-items:flex-end;justify-content:center;gap:8px;flex:none}
+.trio .cat-r{height:122px;width:auto}.trio .cat-p{height:108px;width:auto}.trio .cat-m{height:68px;width:auto}
+.trio svg{height:100px;width:auto}
+.cont{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:14px;margin-bottom:14px}
+.cont .row{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+.cont .ic{width:52px;height:52px;border-radius:16px;background:var(--bg);display:grid;place-items:center;font-size:26px;flex:none}
+.cont small{display:block;color:var(--muted);font-size:13px}.cont b{display:block;font-size:18px;font-weight:900;line-height:1.2}
+.ub{position:relative;overflow:hidden;border-radius:22px;padding:16px;color:#fff;display:flex;align-items:center;gap:14px;cursor:pointer;min-height:96px;margin-top:14px;list-style:none;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+.ub::-webkit-details-marker{display:none}
+.ub img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ub.hasimg::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.5),rgba(0,0,0,.05))}
+.ub>*{position:relative;z-index:2}
+.em2{font-size:44px;line-height:1;flex:none}
+.ubt{flex:1;min-width:0}.ubt b{font-size:18px;font-weight:900;display:block;line-height:1.2}.ubt small{display:block;font-size:13px;opacity:.95;margin-top:2px;line-height:1.3}
+.ubp{height:6px;background:rgba(255,255,255,.35);border-radius:9px;margin-top:8px;overflow:hidden}.ubp i{display:block;height:100%;background:#fff;border-radius:9px}
+.ubn{font-weight:900;font-size:15px;flex:none}
 .nav{position:sticky;bottom:0;margin:auto -16px -16px;padding:8px 12px;background:var(--card);border-top:2px solid var(--line);display:flex;justify-content:space-around}
 .nav button{background:none;border:0;font:inherit;font-weight:900;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;font-size:12px;padding:6px 10px}
 .nav button.on{color:var(--acc2)}.nav span{font-size:22px}
@@ -90,12 +111,18 @@ h2{font-size:16px;margin:4px 4px 10px;color:var(--muted);text-transform:uppercas
 <body>
 <div id="app"></div>
 <script>
+function cat(k,mood){
+ mood=mood||'happy';
+ const m=['happy','sad','think','party'].includes(mood)?mood:'happy',key=k+'_'+m;
+ const src=(window.CATIMG&&CATIMG[key])||'img/cats/'+key+'.webp';
+ return `<img class="cat cat-${k}" src="${src}" alt="" onerror='this.outerHTML=catSvg("${k}","${mood}")'>`;
+}
 const CATS={
  r:{b:'#F28C38',hr:28,bw:30,bh:24},
  p:{b:'#34343c',hr:30,bw:46,bh:28},
  m:{b:'#34343c',hr:25,bw:20,bh:15}
 };
-function cat(k,mood){
+function catSvg(k,mood){
  mood=mood||'happy';
  const c=CATS[k],hr=c.hr,hy=100-c.bh-hr*0.9,by=hy+hr*0.9,ey=hy-hr*0.05,ex=hr*0.4;
  const dk='#2a2230';
@@ -183,49 +210,90 @@ Q('cal','Дни и сроки','🗓️',P('today','tomorrow','week','time').con
 Q('past','Past Simple','📐',N(['ago|назад|⏪|Two days ago.|Два дня назад.','last|прошлый|🔙|Last week.|На прошлой неделе.','before|раньше|⏮️|I read it before.|Я читал это раньше.','then|потом|⏭️|Then we ate.|Потом мы поели.','already|уже|✔️|I am already here.|Я уже здесь.']),[['Я работал вчера','I worked yesterday'],['Он играл дома','He played at home'],['Мы пошли домой','We went home'],['Я ел хлеб','I ate bread']],{g:1,note:'<b>Past Simple</b> — действие закончилось в прошлом. У <b>правильных</b> глаголов добавляем <b>-ed</b>: <b>work → worked</b>, <b>play → played</b>. <b>Неправильные</b> нужно запомнить: <b>go → went</b>, <b>eat → ate</b>.<br><br>Быть: <b>I was</b>, <b>you were</b>, <b>he was</b>, <b>we were</b>. Отрицание: <b>did not</b> + обычный глагол: <b>I did not work</b>.'}),
 Q('future','Future Simple','📐',N(['soon|скоро|🔜|See you soon.|Скоро увидимся.','later|позже|🕓|See you later.|Увидимся позже.','next|следующий|⏩|Next week.|На следующей неделе.','tonight|сегодня вечером|🌙|I read tonight.|Я читаю сегодня вечером.','maybe|может быть|🤔|Maybe yes.|Может быть, да.']),[['Я пойду завтра','I will go tomorrow'],['Она будет читать','She will read'],['Мы будем играть','We will play'],['Они скоро придут','They will come soon']],{g:1,note:'<b>Future Simple</b> — то, что случится потом. Формула: <b>will</b> + глагол без изменений, для всех лиц одинаково: <b>I will go</b>, <b>she will read</b>, <b>they will play</b>.<br><br>Отрицание: <b>will not</b>: <b>I will not go</b>. Вопрос: <b>Will you come?</b>'})
 );
+(function(){
+ const out=[];
+ L.forEach(l=>{
+  const sents=l.g?l.s:[],n=Math.max(1,Math.ceil(l.w.length/5));
+  if(n===1){out.push(Object.assign({},l,{o:l.id,u:l.t,s:sents}));return}
+  const sz=Math.ceil(l.w.length/n);
+  for(let k=0;k<n;k++){
+   const q=Object.assign({},l,{o:l.id,id:l.id+'_'+(k+1),t:l.t+' · '+(k+1),u:l.t,w:l.w.slice(k*sz,(k+1)*sz),s:k===n-1?sents:[]});
+   if(k>0)delete q.note;
+   out.push(q);
+  }
+ });
+ L.length=0;out.forEach(q=>L.push(q));
+})();
+const LT={hello_1:'Здороваемся и прощаемся',hello_2:'Вежливые слова',meet_1:'Люди вокруг',meet_2:'Кто и откуда',tobe_1:'Я, ты, он, она',tobe_2:'Мы, они и глагол to be',family_1:'Мама, папа, братья и сёстры',family_2:'Дети и родители',family2_1:'Тёти, дяди, бабушки, дедушки',family2_2:'Сводная семья',food_1:'Что на столе',food_2:'Кофе, чай и завтрак',num:'Считаем до пяти',num2_1:'Шесть, семь, десять',num2_2:'Восемь, девять, двадцать',colors_1:'Яркие цвета',colors_2:'Тёмные и нежные цвета',adj_1:'Большой и маленький',adj_2:'Новое, старое, горячее',animals_1:'Домашние любимцы',animals_2:'Ферма и не только',house_1:'Дом и комнаты',house_2:'Мебель и кухня',verbs_1:'Что мы делаем',verbs_2:'День за днём',ps:'Present Simple: привычки',feel_1:'Тело и радость',feel_2:'Грустно, голодно, устал',pc:'Present Continuous: сейчас',tod:'Утро, день, вечер',cal_1:'Сегодня и завтра',cal_2:'Вчера, месяц, год',past:'Past Simple: что было',future:'Future Simple: что будет'};
+const UNITS=[
+ {id:'u1',t:'Приветствие и основы общения',d:'Здороваемся, знакомимся, строим первые фразы',e:'💬',c:['#ff9a4d','#ff6b6b'],ids:['hello','meet','tobe']},
+ {id:'u2',t:'Моя семья',d:'Родители, братья и сёстры, сводные родственники',e:'👨‍👩‍👧',c:['#7c83fd','#96baff'],ids:['family','family2']},
+ {id:'u3',t:'Еда и напитки',d:'Что на столе и что мы пьём',e:'🍽️',c:['#43c59e','#7ce0b6'],ids:['food']},
+ {id:'u4',t:'Числа',d:'Считаем от одного до двадцати',e:'🔢',c:['#f6b73c','#ffd86b'],ids:['num','num2']},
+ {id:'u5',t:'Цвета и описания',d:'Какой он: красный, большой, горячий',e:'🎨',c:['#ff7eb3','#ff9a9e'],ids:['colors','adj']},
+ {id:'u6',t:'Животные',d:'Кошки, собаки и другие друзья',e:'🐾',c:['#a18cd1','#d58bd0'],ids:['animals']},
+ {id:'u7',t:'Мой дом',d:'Комнаты, мебель, кухня',e:'🏠',c:['#4facfe','#00c6ff'],ids:['house']},
+ {id:'u8',t:'Повседневные действия',d:'Что мы делаем каждый день, плюс Present Simple',e:'🏃',c:['#fa709a','#f9a03f'],ids:['verbs','ps']},
+ {id:'u9',t:'Тело и чувства',d:'Как ты себя чувствуешь, плюс Present Continuous',e:'😊',c:['#30cfd0','#667eea'],ids:['feel','pc']},
+ {id:'u10',t:'Время',d:'Утро, вчера, завтра, плюс Past и Future',e:'⏰',c:['#5f72bd','#9b23ea'],ids:['tod','cal','past','future']}
+];
+L.forEach(q=>{if(LT[q.id])q.t=LT[q.id]});
 ALLW.length=0;L.forEach(l=>ALLW.push(...l.w));
 const $=s=>document.querySelector(s);
 const sh=a=>a.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
 const today=()=>new Date().toISOString().slice(0,10);
 let S={xp:0,streak:0,last:'',done:{}};
 try{const j=JSON.parse(localStorage.getItem('eq'));if(j)S=j}catch(e){}
-S.coll=S.coll||{};
+S.coll=S.coll||{};S.weak=S.weak||{};if(S.hp==null){S.hp=5;S.hpt=Date.now()}
+L.forEach(q=>{if(q.o&&S.done[q.o])S.done[q.id]=true});
 const save=()=>{S.t=Date.now();try{localStorage.setItem('eq',JSON.stringify(S))}catch(e){}try{cloudSave()}catch(e){}try{submit()}catch(e){}};
 try{if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand()}}catch(e){}
 
 function home(){
  const n=L.findIndex(l=>!S.done[l.id]);
  const msg=S.xp===0?'Привет! Я Рыжик. Давай выучим первые слова вместе!':(n===-1?'Ты прошёл все уроки! Скоро будут новые.':'С возвращением! Продолжим урок «'+L[n].t+'»?');
- $('#app').innerHTML=`<div class="top"><div class="logo">🐾 Catslingo</div><div class="pills"><div class="pill">🔥 ${S.streak}</div><div class="pill">⭐ ${S.xp}</div><div class="pill" onclick="words()" style="cursor:pointer">📚 ${Object.keys(S.coll).length}</div></div></div>
- <div class="hero pop">${cat('r','happy')}<div class="bubble">${msg}</div></div>
- <h2>Уровень A1</h2><div class="path">${L.map((l,i)=>{
-  const d=S.done[l.id],lk=i>0&&!S.done[L[i-1].id];
-  return `<button class="node ${d?'done':lk?'lock':'cur'}" ${lk?'disabled':`onclick="start(${i})"`}><div class="ic">${l.e}</div><div><b>${l.t}</b><small>${l.g?'Грамматика':'Урок '+(i+1)} · ${l.w.length} слов</small></div><div class="tag">${d?'✅':lk?'🔒':'▶️'}</div></button>`}).join('')}<div class="node lock"><div class="ic">🔒</div><div><b>Уровень A2</b><small>Откроется после A1</small></div></div></div>${nav('h')}`;
+ const cu=n===-1?-1:UNITS.findIndex(u=>u.ids.includes(L[n].o));
+ const cl=n>=0?L[n]:null,cun=cl?UNITS.find(u=>u.ids.includes(cl.o)):null;
+ const cont=cl?`<div class="cont pop"><div class="row"><div class="ic">${cl.g?'📐':EX[cl.w[0][0]][0]}</div><div><small>${cun?cun.t:''}</small><b>${cl.t}</b></div></div><button class="btn" style="margin:0" onclick="start(${n})">${S.xp===0?'Начать урок':'Продолжить'}</button></div>`:`<div class="cont pop"><b>Все уроки A1 пройдены! 🎉</b><small>Скоро появится A2</small></div>`;
+ const units=UNITS.map((u,ui)=>{
+  const idx=L.map((l,i)=>i).filter(i=>u.ids.includes(L[i].o));
+  const dn=idx.filter(i=>S.done[L[i].id]).length,tot=idx.length;
+  const locked=idx.length>0&&idx[0]>0&&!S.done[L[idx[0]-1].id];
+  const nodes=idx.map(i=>{
+   const l=L[i],d=S.done[l.id],lk=i>0&&!S.done[L[i-1].id];
+   return `<button class="node ${d?'done':lk?'lock':'cur'}" ${lk?'disabled':`onclick="start(${i})"`}><div class="ic">${l.g?'📐':EX[l.w[0][0]][0]}</div><div><b>${l.t}</b><small>${l.w.slice(0,4).map(w=>w[0]).join(' · ')}</small></div><div class="tag">${d?'✅':lk?'🔒':'▶️'}</div></button>`}).join('');
+  return `<details class="unit" ${ui===cu?'open':''}><summary class="ub" style="background:linear-gradient(135deg,${u.c[0]},${u.c[1]});${locked?'filter:grayscale(.6);opacity:.8':''}"><img src="img/${u.id}.jpg" alt="" onload="this.parentNode.classList.add('hasimg')" onerror="this.remove()"><div class="em2">${u.e}</div><div class="ubt"><b>${u.t}</b><small>${u.d}</small><div class="ubp"><i style="width:${tot?dn/tot*100:0}%"></i></div></div><div class="ubn">${locked?'🔒':dn+'/'+tot}</div></summary><div class="path" style="padding:12px 0 4px">${nodes}</div></details>`;
+ }).join('');
+ $('#app').innerHTML=`<div class="top"><div class="logo">🐾 Catslingo</div><div class="pills"><div class="pill">❤️ ${hearts()}</div><div class="pill">🔥 ${S.streak}</div><div class="pill">⭐ ${S.xp}</div></div></div>
+ <div class="hero3 pop"><div class="bubble3"><b>Hello! 🐾</b>${S.xp===0?'Готов к первому уроку, друг?':'Рады видеть тебя снова!'}</div><div class="trio">${cat('r','happy')}${cat('p','happy')}${cat('m','happy')}</div></div>${cont}${homeExtra()}
+ <h2>Уровень A1</h2>${units}<div class="node lock" style="margin-top:14px"><div class="ic">🔒</div><div><b>Уровень A2</b><small>Откроется после A1</small></div></div><div style="height:12px"></div>${nav('h')}`;
 }
 
 let G;
 function start(i){
- const l=L[i];
- const ex=[];
+ if(hearts()<=0)return noHearts();
+ const l=L[i],ex=[],ds=w=>sh([w[0],...sh(ALLW.filter(x=>x[0]!==w[0])).slice(0,3).map(x=>x[0])]);
  l.w.forEach((w,k)=>{
-  const rev=k%2===1;
-  const q=rev?w[1]:w[0],a=rev?w[0]:w[1];
+  const rev=k%2===1,q=rev?w[1]:w[0],a=rev?w[0]:w[1];
   const pool=ALLW.map(x=>rev?x[0]:x[1]).filter(x=>x!==a);
   ex.push({t:'c',q,a,o:sh([a,...sh(pool).slice(0,3)]),rev});
+  if(k%2===0){ex.push({t:'t',q:w[1],a:w[0]});ex.push({t:'l',a:w[0],o:ds(w)})}
+  else ex.push({t:'a',a:w[0]});
  });
- l.s.forEach(s=>ex.push({t:'b',q:s[0],a:s[1]}));
- l.w.forEach((w,k)=>{if(k%2===0)ex.push({t:'t',q:w[1],a:w[0]})});
+ l.s.forEach((s,k)=>ex.push({t:'b',q:s[0],a:s[1],lis:k%2===1?1:0}));
  ex.push({t:'m',p:sh(l.w).slice(0,5)});
- const RK={c:0,m:1,t:2,b:3};
  G={i,ex:sh(ex).sort((a,b)=>RK[a.t]-RK[b.t]),k:0,ok:0,sel:[],ik:0,miss:0,n0:ex.length,bad:new Set()};
  intro();
 }
 function step(){
- if(G.k>=G.ex.length)return result();
+ if(G.k>=G.ex.length)return G.prac?pracResult():result();
+ if(!G.free&&hearts()<=0)return noHearts();
  const e=G.ex[G.k];
  G.cur=e;
  if(e.t==='t')return stepT(e);
  if(e.t==='m')return stepM(e);
+ if(e.t==='l'||e.t==='a')return stepL(e);
+ if(e.t==='b'&&!S.tut){S.tut=1;save();return tut()}
  const pr=Math.round(G.k/G.ex.length*100);
  let body;
  if(e.t==='c'){
@@ -233,9 +301,10 @@ function step(){
  }else{
   const toks=e.a.split(' ');
   G.bank=sh(toks.map((t,i)=>({t,i})));G.sel=[];
-  body=`<h3>Собери предложение</h3><div class="word" style="font-size:24px">${e.q}</div><div class="ans" id="ans"></div><div class="bank" id="bank"></div><button class="btn" id="chk" disabled>Проверить</button>`;
+  body=`<h3>${e.lis?'Послушай и собери предложение':'Собери предложение'}</h3>${e.lis?`<div style="text-align:center;margin:16px 0"><button class="say" style="font-size:20px;padding:14px 22px" onclick="say(G.cur.a)">🔊 Послушать</button></div>`:`<div class="word" style="font-size:24px">${e.q}</div>`}<div class="ans" id="ans"></div><div class="bank" id="bank"></div><button class="btn" id="chk" disabled>Проверить</button>`;
  }
- $('#app').innerHTML=`<div class="lh"><button class="x" onclick="home()" aria-label="Закрыть">✕</button><div class="bar"><i style="width:${pr}%"></i></div></div><div class="q pop" id="q">${body}</div><div id="fbx"></div>`;
+ $('#app').innerHTML=`<div class="lh"><button class="x" onclick="home()" aria-label="Закрыть">✕</button><div class="bar"><i style="width:${pr}%"></i></div><div class="pill">❤️ ${hearts()}</div></div><div class="q pop" id="q">${body}</div><div id="fbx"></div>`;
+ if(e.lis)say(e.a);
  if(e.t==='c')document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pickC(b,e));
  else{drawB();$('#chk').onclick=()=>checkB(e)}
 }
@@ -260,18 +329,21 @@ function checkB(e){
 }
 const PR=['Отлично!','Супер!','Так держать!','Верно!','Молодец!'];
 function fb(ok,a,msg){
- if(ok)G.ok++;else{G.miss++;retry(G.cur)}
+ const en=wordOf(G.cur);
+ if(ok){G.ok++;G.cb=(G.cb||0)+1;G.mc=Math.max(G.mc||0,G.cb);if(G.prac&&en&&S.weak[en]){S.weak[en]--;if(!S.weak[en])delete S.weak[en]}}
+ else{G.miss++;G.cb=0;retry(G.cur);if(en)S.weak[en]=(S.weak[en]||0)+1;if(!G.free)loseHeart()}
+ save();
  const who=ok?'r':'p';
  const txt=ok?PR[Math.floor(Math.random()*PR.length)]:(msg||'Не страшно, ошибки помогают учиться. Правильно: <b>'+a+'</b>. Повторим это в конце урока.');
  $('#fbx').innerHTML=`<div class="fb ${ok?'ok':'no'} pop"><div class="fbr">${cat(who,ok?'happy':'sad')}<p>${ok?'<b>'+txt+'</b>':txt}</p></div><button class="btn" style="margin-top:0" onclick="G.k++;step()">Дальше</button></div>`;
 }
 function result(){
- const l=L[G.i],cor=Math.max(0,G.n0-G.miss),xp=cor*10+(G.miss===0?10:0);
- S.xp+=xp;S.done[l.id]=true;
+ const l=L[G.i],cor=Math.max(0,G.n0-G.miss),bn=Math.floor((G.mc||0)/5)*5,xp=cor*10+(G.miss===0?10:0)+bn,lv0=Math.floor(S.xp/100);
+ S.xp+=xp;S.done[l.id]=true;const up=Math.floor(S.xp/100)>lv0;
  const t=today(),y=new Date(Date.now()-864e5).toISOString().slice(0,10);
  if(S.last!==t){S.streak=S.last===y?S.streak+1:1;S.last=t}
  save();
- $('#app').innerHTML=`<div class="res pop">${cat('m','happy')}<h1>Урок пройден!</h1><div style="color:var(--muted)">«${l.t}»</div>
+ $('#app').innerHTML=`<div class="res pop">${cat('m','party')}<h1>${up?'Новый уровень!':'Урок пройден!'}</h1><div style="color:var(--muted)">«${l.t}»${bn?' · серия +'+bn+' ⭐':''}${up?' · 🏅 уровень '+(Math.floor(S.xp/100)+1):''}</div>
  <div class="stats"><div class="stat"><b>+${xp}</b><small>очков опыта</small></div><div class="stat"><b>${cor}/${G.n0}</b><small>верных ответов</small></div><div class="stat"><b>🔥 ${S.streak}</b><small>дней подряд</small></div></div>
  <button class="btn" onclick="home()">Продолжить</button></div>`;
 }
@@ -279,15 +351,15 @@ function retry(e){
  if(!e||e.t==='m'||(e.n||0)>=2)return;
  let r;
  if(e.t==='b')r={t:'b',q:e.q,a:e.a,n:(e.n||0)+1};
- else{const en=e.t==='t'?e.a:(e.rev?e.a:e.q),w=ALLW.find(x=>x[0]===en);r={t:'t',q:w[1],a:en,n:(e.n||0)+1}}
+ else{const en=wordOf(e),w=ALLW.find(x=>x[0]===en);r={t:'t',q:w[1],a:en,n:(e.n||0)+1}}
  G.ex.push(r);
 }
 function stepM(e){
  const pr=Math.round(G.k/G.ex.length*100);
- $('#app').innerHTML=`<div class="lh"><button class="x" onclick="home()" aria-label="Закрыть">✕</button><div class="bar"><i style="width:${pr}%"></i></div></div><div class="q pop"><h3>Соедини пары</h3><div style="color:var(--muted);font-size:14px">Нажми слово, затем его перевод</div><div class="mt"><div class="mc" id="mL"></div><div class="mc" id="mR"></div></div></div><div id="fbx"></div>`;
+ $('#app').innerHTML=`<div class="lh"><button class="x" onclick="home()" aria-label="Закрыть">✕</button><div class="bar"><i style="width:${pr}%"></i></div><div class="pill">❤️ ${hearts()}</div></div><div class="q pop"><h3>Соедини пары</h3><div style="color:var(--muted);font-size:14px">Нажми слово, затем его перевод</div><div class="mt"><div class="mc" id="mL"></div><div class="mc" id="mR"></div></div></div><div id="fbx"></div>`;
  const Ls=sh(e.p.map((w,i)=>({t:w[0],i,s:'e'}))),Rs=sh(e.p.map((w,i)=>({t:w[1],i,s:'r'})));
  let a=null,left=e.p.length,miss=0;
- const done=()=>{if(miss)G.bad.forEach(en=>{const w=ALLW.find(q=>q[0]===en);G.ex.push({t:'t',q:w[1],a:en,n:1})});G.bad.clear();fb(miss===0,'',miss?'Были ошибки в парах. Эти слова повторим в конце урока.':null)};
+ const done=()=>{if(miss)G.bad.forEach(en=>{const w=ALLW.find(q=>q[0]===en);G.ex.push({t:'t',q:w[1],a:en,n:1});S.weak[en]=(S.weak[en]||0)+1});G.bad.clear();fb(miss===0,'',miss?'Были ошибки в парах. Эти слова повторим в конце урока.':null)};
  const tap=c=>{
   if(c.el.disabled)return;
   if(c.s==='e')say(c.t);
@@ -308,11 +380,11 @@ function intro(){
  $('#app').innerHTML=`<div class="lh"><button class="x" onclick="home()" aria-label="Закрыть">✕</button><div class="bar"><i style="width:${G.ik/l.w.length*100}%"></i></div></div>
  <div class="q pop"><h3>Новое слово ${G.ik+1} из ${l.w.length}</h3>
  <div class="card"><div class="em">${d[0]}</div><div class="en">${w[0]}</div><button class="say" onclick="say('${w[0]}')">🔊 Послушать</button><div class="ru">${w[1]}</div><div class="exs"><b>${d[1]}</b><br>${d[2]}</div></div>
- <button class="btn" onclick="G.ik++;${last?'step()':'intro()'}">${last?'К упражнениям':'Дальше'}</button></div>`;
+ <button class="btn" onclick="G.ik++;${last?'exS()':'intro()'}">${last?'К упражнениям':'Дальше'}</button></div>`;
 }
 function stepT(e){
  const pr=Math.round(G.k/G.ex.length*100);
- $('#app').innerHTML=`<div class="lh"><button class="x" onclick="home()" aria-label="Закрыть">✕</button><div class="bar"><i style="width:${pr}%"></i></div></div><div class="q pop"><h3>${e.n?'Повторение: напиши слово ещё раз':'Напиши по-английски'}</h3><div class="word" style="margin-bottom:6px">${EX[e.a][0]}</div><div class="word" style="font-size:26px;margin-top:0">${e.q}</div><div style="text-align:center;margin-bottom:14px"><button class="say" onclick="say('${e.a}')">🔊 Послушать слово</button></div><input class="inp" id="inp" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Введи слово"><button class="btn" id="chk" style="margin-top:16px">Проверить</button></div><div id="fbx"></div>`;
+ $('#app').innerHTML=`<div class="lh"><button class="x" onclick="home()" aria-label="Закрыть">✕</button><div class="bar"><i style="width:${pr}%"></i></div><div class="pill">❤️ ${hearts()}</div></div><div class="q pop"><h3>${e.n?'Повторение: напиши слово ещё раз':'Напиши по-английски'}</h3><div class="word" style="margin-bottom:6px">${EX[e.a][0]}</div><div class="word" style="font-size:26px;margin-top:0">${e.q}</div><div style="text-align:center;margin-bottom:14px"><button class="say" onclick="say('${e.a}')">🔊 Послушать слово</button></div><input class="inp" id="inp" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Введи слово"><button class="btn" id="chk" style="margin-top:16px">Проверить</button></div><div id="fbx"></div>`;
  const inp=$('#inp');inp.focus();
  const go=()=>{const ok=inp.value.trim().toLowerCase()===e.a.toLowerCase();inp.disabled=true;$('#chk').style.display='none';fb(ok,e.a,ok?null:'Не страшно! Пишется так: <b>'+e.a+'</b> ('+e.a.toUpperCase().split('').join('-')+'). Повторим это слово в конце урока.')};
  $('#chk').onclick=go;inp.onkeydown=ev=>{if(ev.key==='Enter')go()};
@@ -330,7 +402,7 @@ function submit(){try{if(!DB||!UID)return;const k=S.xp+'|'+S.streak;if(k===SENT)
 (async()=>{try{if(!window.claude||!claude.use)return;const u=await claude.use('user'),d=await claude.use('db');if(u&&d){UID=await u.id();ME=(await u.me()).name;DB=d;submit()}}catch(e){}})();
 function noteS(){
  const l=L[G.i];
- $('#app').innerHTML=`<div class='lh'><button class='x' onclick='home()'>✕</button><div class='bar'><i style='width:0'></i></div></div><div class='q pop'><h3>${l.t}</h3><div class='hero' style='align-items:flex-start'>${cat('p','happy')}<div class='bubble' style='line-height:1.5'>${l.note}</div></div><button class='btn' onclick='intro()'>Понятно!</button></div>`;
+ $('#app').innerHTML=`<div class='lh'><button class='x' onclick='home()'>✕</button><div class='bar'><i style='width:0'></i></div></div><div class='q pop'><h3>${l.t}</h3><div class='hero' style='align-items:flex-start'>${cat('p','think')}<div class='bubble' style='line-height:1.5'>${l.note}</div></div><button class='btn' onclick='intro()'>Понятно!</button></div>`;
 }
 async function board(){
  $('#app').innerHTML=`<div class='top'><div class='logo'>🏆 Топ игроков</div><div class='pill'>⭐ ${S.xp}</div></div><div id='tl'><div style='color:var(--muted);padding:20px'>Загрузка…</div></div>${nav('t')}`;
@@ -345,7 +417,7 @@ async function board(){
 }
 function games(){
  const n=learned().length,ok=n>=5;
- $('#app').innerHTML=`<div class='top'><div class='logo'>🎮 Игры</div><div class='pill'>⭐ ${S.xp}</div></div><div class='hero pop'>${cat('m','happy')}<div class='bubble'>${ok?'Играй на скорость и бей рекорды! В играх участвуют все слова, которые ты уже выучил ('+n+').':'Выучи хотя бы 5 слов в уроках, и игры откроются!'}</div></div><div class='path'><button class='node ${ok?'cur':'lock'}' ${ok?"onclick='pairsGame()'":'disabled'}><div class='ic'>🧩</div><div><b>Найди пары</b><small>Все изученные слова · лучшее время: ${S.bt?S.bt+' с':'—'}</small></div></button><button class='node ${ok?'cur':'lock'}' ${ok?"onclick='speed()'":'disabled'}><div class='ic'>⚡</div><div><b>Скорость: 30 секунд</b><small>Твой рекорд: ${S.rec||0}</small></div></button></div>${nav('g')}`;
+ $('#app').innerHTML=`<div class='top'><div class='logo'>🎮 Игры</div><div class='pill'>⭐ ${S.xp}</div></div><div class='hero pop'>${cat('m','happy')}<div class='bubble'>${ok?'Играй на скорость и бей рекорды! В играх участвуют все слова, которые ты уже выучил ('+n+').':'Выучи хотя бы 5 слов в уроках, и игры откроются!'}</div></div><div class='path'><button class='node ${ok?'cur':'lock'}' ${ok?"onclick='pairsGame()'":'disabled'}><div class='ic'>🧩</div><div><b>Найди пары</b><small>Все изученные слова · лучшее время: ${S.bt?S.bt+' с':'—'}</small></div></button><button class='node ${ok?'cur':'lock'}' ${ok?"onclick='speed()'":'disabled'}><div class='ic'>⚡</div><div><b>Скорость: 30 секунд</b><small>Твой рекорд: ${S.rec||0}</small></div></button><button class='node cur' onclick='practice()'><div class='ic'>🎯</div><div><b>Слабые слова</b><small>${Object.keys(S.weak).length?'Нужно повторить: '+Object.keys(S.weak).length:'Повторение изученного'} · +1 ❤️</small></div></button></div>${nav('g')}`;
 }
 function mkMatch(p,miss,done){
  let a=null,left=p.length;
@@ -362,7 +434,7 @@ function mkMatch(p,miss,done){
  sh(p.map((w,i)=>({t:w[1],i,s:'r'}))).forEach(c=>mk(c,'#mR'));
 }
 function endScr(h,st,note,again){
- $('#app').innerHTML=`<div class='res pop'>${cat('m','happy')}<h1>${h}</h1><div style='color:var(--acc2)'>${note}</div><div class='stats'>${st.map(s=>`<div class='stat'><b>${s[0]}</b><small>${s[1]}</small></div>`).join('')}</div><button class='btn' onclick='${again}'>Ещё раз</button><button class='btn' style='margin-top:12px;background:var(--card);color:var(--text);box-shadow:0 5px 0 var(--line)' onclick='games()'>К играм</button></div>`;
+ $('#app').innerHTML=`<div class='res pop'>${cat('m','party')}<h1>${h}</h1><div style='color:var(--acc2)'>${note}</div><div class='stats'>${st.map(s=>`<div class='stat'><b>${s[0]}</b><small>${s[1]}</small></div>`).join('')}</div><button class='btn' onclick='${again}'>Ещё раз</button><button class='btn' style='margin-top:12px;background:var(--card);color:var(--text);box-shadow:0 5px 0 var(--line)' onclick='games()'>К играм</button></div>`;
 }
 function pairsGame(){
  const p=sh(learned()).slice(0,6),t0=Date.now();
@@ -399,12 +471,65 @@ function cloudLoad(){
    if(e2)return;
    const c=JSON.parse(ks.map(k=>r[k]).join(''));
    if((c.t||0)>(S.t||0)){
-    c.coll=c.coll||{};S=c;
+    c.coll=c.coll||{};c.weak=c.weak||{};if(c.hp==null){c.hp=5;c.hpt=Date.now()}S=c;
     try{localStorage.setItem('eq',JSON.stringify(S))}catch(x){}
     if($('.path'))home();
    }else if((S.t||0)>(c.t||0))cloudSave();
   }catch(x){}});
  })}catch(e){}
+}
+const RK={c:0,l:1,m:2,t:3,a:4,b:5},HMAX=5,HREG=30*60000,LN=['Котёнок','Любопытный кот','Хвостатый ученик','Кот-полиглот','Профессор Мурр','Мастер слова','Гуру английского','Мудрый кот','Легенда','Король мурлыканья'];
+function hearts(){
+ if(S.hp>=HMAX){S.hpt=Date.now();return S.hp}
+ const n=Math.floor((Date.now()-S.hpt)/HREG);
+ if(n>0){S.hp=Math.min(HMAX,S.hp+n);S.hpt+=n*HREG;if(S.hp>=HMAX)S.hpt=Date.now()}
+ return S.hp;
+}
+function loseHeart(){const h=hearts();if(h>=HMAX)S.hpt=Date.now();S.hp=Math.max(0,h-1)}
+const nextHeart=()=>Math.max(1,Math.ceil((S.hpt+HREG-Date.now())/60000));
+function wordOf(e){if(!e)return null;if(e.t==='c')return e.rev?e.a:e.q;if(e.t==='t'||e.t==='l'||e.t==='a')return e.a;return null}
+function homeExtra(){
+ const lv=Math.floor(S.xp/100)+1,p=S.xp%100,wk=Object.keys(S.weak).length;
+ return `<div class='hero' style='padding:10px 14px;margin-top:-6px'><b style='white-space:nowrap'>🏅 Ур. ${lv} · ${LN[lv-1]||'Мастер'}</b><div class='bar' style='margin-left:10px'><i style='width:${p}%'></i></div></div>`+(wk>=3?`<button class='node cur' style='margin-bottom:16px' onclick='practice()'><div class='ic'>🎯</div><div><b>Повтори слабые слова</b><small>Ждут повторения: ${wk}</small></div></button>`:'');
+}
+function noHearts(){
+ $('#app').innerHTML=`<div class='res pop'>${cat('p','sad')}<h1>Сердечки закончились</h1><div style='color:var(--muted);max-width:300px'>Следующее сердечко через ${nextHeart()} мин. Пока потренируй слабые слова: за тренировку вернётся одно сердечко.</div><div style='margin:16px 0;font-size:24px'>💔💔💔💔💔</div><button class='btn' onclick='practice()'>Тренировать слабые слова</button><button class='btn' style='margin-top:12px;background:var(--card);color:var(--muted);box-shadow:0 5px 0 var(--line)' disabled>📺 Восстановить за рекламу (скоро)</button><button class='btn' style='margin-top:12px;background:var(--card);color:var(--text);box-shadow:0 5px 0 var(--line)' onclick='home()'>На главную</button></div>`;
+}
+function tut(){
+ $('#app').innerHTML=`<div class='lh'><button class='x' onclick='home()'>✕</button><div class='bar'><i style='width:0'></i></div></div><div class='q pop'><h3>Как собирать предложения</h3><div class='hero' style='align-items:flex-start'>${cat('p','think')}<div class='bubble' style='line-height:1.5'>Тебе покажут фразу по-русски, а английские слова будут перемешаны. Нужно выложить их в правильном порядке.</div></div><div class='card' style='text-align:left'><div style='color:var(--muted);font-size:14px'>Пример</div><div class='word' style='font-size:22px;margin:6px 0 10px;text-align:left'>Я студент</div><div class='ans' style='margin:6px 0'><span class='chip'>I</span><span class='chip'>am</span><span class='chip'>a</span><span class='chip'>student</span></div><div style='line-height:1.7;font-size:15px;margin-top:8px'><b>1.</b> Прочитай русскую фразу.<br><b>2.</b> Нажимай на слова внизу по очереди: они встанут в строку сверху.<br><b>3.</b> Ошибся? Нажми на слово в строке, и оно вернётся вниз.<br><b>4.</b> Когда порядок верный, нажми «Проверить».</div></div><button class='btn' onclick='step()'>Понятно, попробую!</button></div>`;
+}
+function exS(){
+ const l=L[G.i];
+ if(!l.s.length)return step();
+ $('#app').innerHTML=`<div class='lh'><button class='x' onclick='home()'>✕</button><div class='bar'><i style='width:100%'></i></div></div><div class='q pop'><h3>Примеры предложений</h3><div class='hero' style='align-items:flex-start'>${cat('r','happy')}<div class='bubble'>Сначала посмотри, как выглядят готовые предложения. Дальше ты будешь собирать похожие.</div></div>${l.s.map(x=>`<div class='wr'><div><b>${x[1]}</b><small>${x[0]}</small></div><button class='x' data-t='${esc(x[1])}' onclick='say(this.dataset.t)'>🔊</button></div>`).join('')}<button class='btn' style='margin-top:16px' onclick='step()'>К упражнениям</button></div>`;
+}
+function stepL(e){
+ const pr=Math.round(G.k/G.ex.length*100),ty=e.t==='a';
+ $('#app').innerHTML=`<div class='lh'><button class='x' onclick='home()' aria-label='Закрыть'>✕</button><div class='bar'><i style='width:${pr}%'></i></div><div class='pill'>❤️ ${hearts()}</div></div><div class='q pop'><h3>${ty?'Послушай и напиши':'Послушай и выбери слово'}</h3><div style='text-align:center;margin:18px 0 22px'><button class='say' style='font-size:22px;padding:18px 28px' id='snd'>🔊 Слушать</button></div>${ty?`<input class='inp' id='inp' autocomplete='off' autocapitalize='off' spellcheck='false' placeholder='Что ты услышал?'><button class='btn' id='chk' style='margin-top:16px'>Проверить</button>`:`<div class='opts'>${e.o.map(o=>`<button class='opt' data-v='${esc(o)}'>${o}</button>`).join('')}</div>`}</div><div id='fbx'></div>`;
+ $('#snd').onclick=()=>say(e.a);say(e.a);
+ if(ty){const inp=$('#inp');inp.focus();const go=()=>{const ok=inp.value.trim().toLowerCase()===e.a.toLowerCase();inp.disabled=true;$('#chk').style.display='none';fb(ok,e.a,ok?null:'Это слово <b>'+e.a+'</b> ('+e.a.toUpperCase().split('').join('-')+'), по-русски «'+(ALLW.find(x=>x[0]===e.a)||[0,''])[1]+'». Повторим в конце урока.')};$('#chk').onclick=go;inp.onkeydown=ev=>{if(ev.key==='Enter')go()}}
+ else document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pickC(b,e));
+}
+function practice(){
+ let ws=Object.keys(S.weak).sort((a,b)=>S.weak[b]-S.weak[a]).map(en=>ALLW.find(x=>x[0]===en)).filter(Boolean).slice(0,8);
+ if(ws.length<4)ws=ws.concat(sh(learned().filter(w=>!ws.includes(w)))).slice(0,6);
+ if(!ws.length){
+  $('#app').innerHTML=`<div class='res pop'>${cat('p','happy')}<h1>Пока нечего повторять</h1><div style='color:var(--muted)'>Пройди хотя бы один урок.</div><button class='btn' style='margin-top:24px' onclick='home()'>К урокам</button></div>`;return;
+ }
+ const ex=[];
+ ws.forEach((w,k)=>{
+  const rev=k%2===1,a=rev?w[0]:w[1],pool=ALLW.map(x=>rev?x[0]:x[1]).filter(x=>x!==a);
+  ex.push({t:'c',q:rev?w[1]:w[0],a,o:sh([a,...sh(pool).slice(0,3)]),rev});
+  ex.push(k%2===0?{t:'t',q:w[1],a:w[0]}:{t:'l',a:w[0],o:sh([w[0],...sh(ALLW.filter(x=>x[0]!==w[0])).slice(0,3).map(x=>x[0])])});
+ });
+ G={prac:1,free:1,ex:sh(ex).sort((a,b)=>RK[a.t]-RK[b.t]),k:0,ok:0,sel:[],miss:0,n0:ex.length,bad:new Set()};
+ step();
+}
+function pracResult(){
+ const cor=Math.max(0,G.n0-G.miss),xp=cor*5;
+ S.xp+=xp;S.hp=Math.min(HMAX,hearts()+1);if(S.hp>=HMAX)S.hpt=Date.now();save();
+ const wk=Object.keys(S.weak).length;
+ endScr('Тренировка готова!',[['+'+xp,'опыта'],[cor+'/'+G.n0,'верных'],['❤️ '+S.hp,'сердечек']],wk?'Слабых слов осталось: '+wk:'Слабых слов нет, отлично!','practice()');
 }
 home();
 cloudLoad();
