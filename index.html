@@ -380,19 +380,35 @@ function pickVoice(){try{const vs=speechSynthesis.getVoices()||[];VOICE=vs.find(
 try{if(window.speechSynthesis){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}}catch(e){}
 const AC={};
 function toast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),3400)}
-function viaAudio(t,mode,res){
- let done=false;
- const fin=ok=>{if(done)return;done=true;if(!ok){delete AC[t];if(mode==='manual')toast('Не удалось воспроизвести звук. Упражнения на слух можно пропустить.')}res(ok)};
+const TTS=[
+ t=>'https://api.streamelements.com/kappa/v2/speech?voice=Joanna&text='+encodeURIComponent(t),
+ t=>'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q='+encodeURIComponent(t)
+];
+let ENGINE='',LASTERR='';
+function viaAudio(t,mode,res,i){
+ i=i||0;
+ if(i>=TTS.length){
+  if(mode==='manual')toast('Не удалось воспроизвести звук ('+LASTERR+'). Упражнения на слух можно пропустить.');
+  return res(false);
+ }
+ let done=false,tm,a;
+ const key=t+'|'+i;
+ const next=why=>{if(done)return;done=true;clearTimeout(tm);LASTERR=why;delete AC[key];try{a.pause()}catch(e){}viaAudio(t,mode,res,i+1)};
  try{
-  let a=AC[t];
-  if(!a){a=new Audio('https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q='+encodeURIComponent(t));a.preload='auto';AC[t]=a}
+  a=AC[key];
+  if(!a){a=new Audio(TTS[i](t));a.preload='auto';AC[key]=a}
   try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}
   Object.values(AC).forEach(x=>{if(x!==a)try{x.pause()}catch(e){}});
-  a.onplaying=()=>fin(true);a.onerror=()=>fin(false);
+  a.onplaying=()=>{if(done)return;done=true;clearTimeout(tm);ENGINE='онлайн '+(i+1);res(true)};
+  a.onerror=()=>next('ошибка '+(a.error?a.error.code:0));
+  tm=setTimeout(()=>next('таймаут'),5000);
   try{a.currentTime=0}catch(e){}
-  const p=a.play();if(p&&p.catch)p.catch(()=>fin(false));
-  setTimeout(()=>fin(false),4000);
- }catch(e){fin(false)}
+  const p=a.play();
+  if(p&&p.catch)p.catch(e=>{
+   if(mode==='auto'){done=true;clearTimeout(tm);LASTERR='автозапуск';res(false)}
+   else next(e&&e.name==='NotAllowedError'?'запрещено':'play')
+  });
+ }catch(e){next('сбой')}
 }
 function say(t,mode){
  mode=mode||'manual';
@@ -403,7 +419,7 @@ function say(t,mode){
     let st=false,fb=false;
     const alt=()=>{if(fb||st)return;fb=true;try{speechSynthesis.cancel()}catch(e){}viaAudio(t,mode,res)};
     const u=new SpeechSynthesisUtterance(t);u.voice=VOICE;u.lang=VOICE.lang;u.rate=.85;
-    u.onstart=()=>{st=true;res(true)};u.onerror=alt;
+    u.onstart=()=>{st=true;ENGINE='голос устройства';res(true)};u.onerror=alt;
     speechSynthesis.speak(u);
     setTimeout(alt,1200);
     return;
@@ -414,9 +430,11 @@ function say(t,mode){
 }
 const sayA=t=>say(t,'auto');
 function toggleSound(){
- if(!S.nosound){S.nosound=true;save();toast('Упражнения на слух отключены');return home()}
- S.nosound=false;
- say('Hello','test').then(ok=>{if(!ok){S.nosound=true;toast('Звук на этом устройстве не работает, упражнения на слух остаются отключены')}else toast('Звук работает, упражнения на слух включены');save();home()});
+ say('Hello','test').then(ok=>{
+  S.nosound=!ok;save();
+  toast(ok?'Звук работает ('+ENGINE+'). Упражнения на слух включены':'Звук не воспроизводится ('+(LASTERR||'нет голоса')+'). Упражнения на слух отключены');
+  home();
+ });
 }
 function skipListen(){
  S.nosound=true;save();
