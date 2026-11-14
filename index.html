@@ -84,7 +84,8 @@ h2{font-size:16px;margin:4px 4px 10px;color:var(--muted);text-transform:uppercas
 .ub img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .ub.hasimg::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.5),rgba(0,0,0,.05))}
 .ub>*{position:relative;z-index:2}
-.em2{font-size:44px;line-height:1;flex:none}
+.em2{font-size:40px;line-height:1;flex:none}
+.uimg{width:84px;height:84px;flex:none;border-radius:20px;overflow:hidden;background:rgba(255,255,255,.22);display:grid;place-items:center;border:3px solid rgba(255,255,255,.85)}
 .ubt{flex:1;min-width:0}.ubt b{font-size:18px;font-weight:900;display:block;line-height:1.2}.ubt small{display:block;font-size:13px;opacity:.95;margin-top:2px;line-height:1.3}
 .ubp{height:6px;background:rgba(255,255,255,.35);border-radius:9px;margin-top:8px;overflow:hidden}.ubp i{display:block;height:100%;background:#fff;border-radius:9px}
 .ubn{font-weight:900;font-size:15px;flex:none}
@@ -114,7 +115,7 @@ h2{font-size:16px;margin:4px 4px 10px;color:var(--muted);text-transform:uppercas
 function cat(k,mood){
  mood=mood||'happy';
  const m=['happy','sad','think','party'].includes(mood)?mood:'happy',key=k+'_'+m;
- const src=(window.CATIMG&&CATIMG[key])||'img/cats/'+key+'.webp';
+ const src=(window.CATIMG&&CATIMG[key])||'img/cats/'+key+'.svg';
  return `<img class="cat cat-${k}" src="${src}" alt="" onerror='this.outerHTML=catSvg("${k}","${mood}")'>`;
 }
 const CATS={
@@ -262,7 +263,7 @@ function home(){
   const nodes=idx.map(i=>{
    const l=L[i],d=S.done[l.id],lk=i>0&&!S.done[L[i-1].id];
    return `<button class="node ${d?'done':lk?'lock':'cur'}" ${lk?'disabled':`onclick="start(${i})"`}><div class="ic">${l.g?'📐':EX[l.w[0][0]][0]}</div><div><b>${l.t}</b><small>${l.w.slice(0,4).map(w=>w[0]).join(' · ')}</small></div><div class="tag">${d?'✅':lk?'🔒':'▶️'}</div></button>`}).join('');
-  return `<details class="unit" ${ui===cu?'open':''}><summary class="ub" style="background:linear-gradient(135deg,${u.c[0]},${u.c[1]});${locked?'filter:grayscale(.6);opacity:.8':''}"><img src="img/${u.id}.jpg" alt="" onload="this.parentNode.classList.add('hasimg')" onerror="this.remove()"><div class="em2">${u.e}</div><div class="ubt"><b>${u.t}</b><small>${u.d}</small><div class="ubp"><i style="width:${tot?dn/tot*100:0}%"></i></div></div><div class="ubn">${locked?'🔒':dn+'/'+tot}</div></summary><div class="path" style="padding:12px 0 4px">${nodes}</div></details>`;
+  return `<details class="unit" ${ui===cu?'open':''}><summary class="ub" style="background:linear-gradient(135deg,${u.c[0]},${u.c[1]});${locked?'filter:grayscale(.6);opacity:.8':''}"><div class="uimg"><span class="em2">${u.e}</span><img src="${(window.UIMG&&UIMG[u.id])||'img/'+u.id+'.jpg'}" alt="" onerror="this.remove()"></div><div class="ubt"><b>${u.t}</b><small>${u.d}</small><div class="ubp"><i style="width:${tot?dn/tot*100:0}%"></i></div></div><div class="ubn">${locked?'🔒':dn+'/'+tot}</div></summary><div class="path" style="padding:12px 0 4px">${nodes}</div></details>`;
  }).join('');
  $('#app').innerHTML=`<div class="top"><div class="logo">🐾 Catslingo</div><div class="pills"><div class="pill">❤️ ${hearts()}</div><div class="pill">🔥 ${S.streak}</div><div class="pill">⭐ ${S.xp}</div></div></div>
  <div class="hero3 pop"><div class="bubble3"><b>Hello! 🐾</b>${S.xp===0?'Готов к первому уроку, друг?':'Рады видеть тебя снова!'}</div><div class="trio">${cat('r','happy')}${cat('p','happy')}${cat('m','happy')}</div></div>${cont}${homeExtra()}
@@ -394,7 +395,7 @@ function words(){
  const rows=L.map(l=>{const ws=l.w.filter(w=>S.coll[w[0]]);return ws.length?`<h2>${l.e} ${l.t}</h2>`+ws.map(w=>`<div class="wr"><span class="we">${EX[w[0]][0]}</span><div><b>${w[0]}</b><small>${w[1]}</small></div><button class="x" onclick="say('${w[0]}')">🔊</button></div>`).join(''):''}).join('');
  $('#app').innerHTML=`<div class="top"><button class="x" onclick="home()" aria-label="Назад">←</button><div class="logo">📚 Мои слова</div><div class="pill">${n}/${ALLW.length}</div></div>${rows||'<div class="hero pop">'+cat('p','happy')+'<div class="bubble">Пока пусто. Пройди первый урок, и слова появятся здесь!</div></div>'}${nav('w')}`;
 }
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc=s=>String(s).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const learned=()=>ALLW.filter(w=>S.coll[w[0]]);
 const nav=a=>`<div class='nav'>${[['h','🏠','Учиться','home'],['g','🎮','Игры','games'],['w','📚','Слова','words'],['t','🏆','Топ','board']].map(x=>`<button class='${a===x[0]?'on':''}' onclick='${x[3]}()'><span>${x[1]}</span>${x[2]}</button>`).join('')}</div>`;
 let DB=null,UID=null,ME='',SENT='';
@@ -475,7 +476,7 @@ function cloudLoad(){
     try{localStorage.setItem('eq',JSON.stringify(S))}catch(x){}
     if($('.path'))home();
    }else if((S.t||0)>(c.t||0))cloudSave();
-  }catch(x){}});
+  }catch(x){} });
  })}catch(e){}
 }
 const RK={c:0,l:1,m:2,t:3,a:4,b:5},HMAX=5,HREG=30*60000,LN=['Котёнок','Любопытный кот','Хвостатый ученик','Кот-полиглот','Профессор Мурр','Мастер слова','Гуру английского','Мудрый кот','Легенда','Король мурлыканья'];

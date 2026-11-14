@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 112" aria-label="Cat face" role="img">
+  <path d="M60 32 L72 12 L84 38 Z" fill="#F28C38"/>
+  <path d="M60 32 L48 12 L36 38 Z" fill="#F28C38"/>
+  <ellipse cx="60" cy="60" rx="30" ry="26" fill="#F28C38"/>
+  <ellipse cx="60" cy="64" rx="18" ry="13" fill="#fff" opacity=".92"/>
+  <path d="M48 52 q5 -8 10 0" stroke="#2a2230" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+  <path d="M62 52 q5 -8 10 0" stroke="#2a2230" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+  <path d="M54 70 q3 4 6 0 q3 4 6 0" stroke="#2a2230" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <circle cx="42" cy="80" r="3" fill="#d9722a" opacity=".5"/>
+  <circle cx="78" cy="80" r="3" fill="#d9722a" opacity=".5"/>
+</svg>
